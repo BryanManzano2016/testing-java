@@ -3,10 +3,8 @@ package com.bmanzano.testingjava.controllers;
 import com.bmanzano.testingjava.beans.BodyOperation;
 import com.bmanzano.testingjava.services.MathOperationsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("math")
@@ -29,6 +27,15 @@ public class MathOperations {
         Double result = mathOperationsService.getSum(num1, num2);
         return BodyOperation.builder().
                 numberA(num1).numberB(num2).result(result).
+                message(String.format("The result is %f", result)).
+                build();
+    }
+
+    @PostMapping("/sum")
+    public BodyOperation sumJsonPost(@RequestBody BodyOperation body) {
+        Double result = mathOperationsService.getSum(body.getNumberA(), body.getNumberB());
+        return BodyOperation.builder().
+                numberA(body.getNumberA()).numberB(body.getNumberB()).result(result).
                 message(String.format("The result is %f", result)).
                 build();
     }
